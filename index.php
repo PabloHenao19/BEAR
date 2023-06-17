@@ -71,10 +71,10 @@ if (isset($_SESSION['user_id'])) {
                 </div>
             </div>
             Esto es el final del carrito-->
-                <li class="nav-menu-item"><a href="Project.html" class="nav-menu-link nav-like">Inicio</a></li>
-                <li class="nav-menu-item"><a href="formulario1.html" class="nav-menu-link nav-like">Cuenta</a></li>
-                <li class="nav-menu-item"><a href="Envio.html" class="nav-menu-link nav-like">Envio</a></li>
-                <li class="nav-menu-item"><a href="Contacto.html" class="nav-menu-link nav-like">Contacto</a></li>
+                <li class="nav-menu-item"><a href="general.php" class="nav-menu-link nav-like">Inicio</a></li>
+                <li class="nav-menu-item"><a href="login.php" class="nav-menu-link nav-like">Cuenta</a></li>
+                <li class="nav-menu-item"><a href="envio.php" class="nav-menu-link nav-like">Envio</a></li>
+                <li class="nav-menu-item"><a href="contacto.php" class="nav-menu-link nav-like">Contacto</a></li>
           </ul>
             </nav> 
             

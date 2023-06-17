@@ -122,6 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <input type="email" name="email" required>
     <button type="submit">Enviar</button>
   </form>
+  <a href="login.php">Login</a> 
   <?php
   if (isset($_SESSION['error'])) {
     echo '<p style="color: red;">' . $_SESSION['error'] . '</p>';
