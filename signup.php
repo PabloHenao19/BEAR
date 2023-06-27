@@ -8,13 +8,13 @@ if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['conf
   if ($_POST['password'] !== $_POST['confirm_password']) {
     echo "<script>alert('Las contraseñas no coinciden');</script>";
   } else {
-    // Validar la fecha de nacimiento
+    /* Validar la fecha de nacimiento
     $fechaNacimiento = $_POST['fecha_nacimiento'];
     $edadMinima = 18;
     $fechaActual = new DateTime();
     $fechaNacimiento = new DateTime($fechaNacimiento);
     $diferencia = $fechaActual->diff($fechaNacimiento);
-    $edad = $diferencia->y;
+    $edad = $diferencia->y;*/
 
     if ($edad < $edadMinima) {
       echo "<script>alert('Debes ser mayor de 18 años');</script>";
@@ -38,11 +38,11 @@ if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['conf
         if (!preg_match("/^[a-zA-Z ]*$/", $nombre) || !preg_match("/^[a-zA-Z ]*$/", $apellido)) {
           echo "<script>alert('Los caracteres especiales no están permitidos en el nombre y apellido');</script>";
         } else {
-          // Validar teléfono (no debe contener letras)
+          /* Validar teléfono (no debe contener letras)
           $telefono = $_POST['telefono'];
 
           if (!is_numeric($telefono)) {
-            echo "<script>alert('El teléfono no debe contener letras');</script>";
+            echo "<script>alert('El teléfono no debe contener letras');</script>";*/
           } else {
             // Continuar con la inserción en la base de datos
             $sql = "INSERT INTO users (email, password, nombre, apellido, fecha_nacimiento, direccion, telefono) VALUES (:email, :password, :nombre, :apellido, :fecha_nacimiento, :direccion, :telefono)";
@@ -150,9 +150,6 @@ if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['conf
   <form action="signup.php" method="post">
   <input type="text" name="nombre" placeholder="Nombre" required>
     <input type="text" name="apellido" placeholder="Apellido" required>
-    <input type="text" name="direccion" placeholder="Dirección" required>
-    <input type="text" name="telefono" placeholder="Teléfono" required>
-    <input type="date" name="fecha_nacimiento" placeholder="Fecha de Nacimiento" required>
     <input type="text" name="email" placeholder="Ingresar correo" required>
     <input type="password" name="password" placeholder="Ingresar contraseña" required>
     <input type="password" name="confirm_password" placeholder="Confirmar tu contraseña" required>
