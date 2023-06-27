@@ -3,21 +3,18 @@
 require 'database.php';
 
 // Validación del formulario
-if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['confirm_password']) && !empty($_POST['nombre']) && !empty($_POST['apellido']) && !empty($_POST['fecha_nacimiento']) && !empty($_POST['direccion']) && !empty($_POST['telefono'])) {
+if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['confirm_password']) && !empty($_POST['nombre']) && !empty($_POST['apellido'])) {
+  
   // Verificar si las contraseñas coinciden
   if ($_POST['password'] !== $_POST['confirm_password']) {
     echo "<script>alert('Las contraseñas no coinciden');</script>";
   } else {
-    /* Validar la fecha de nacimiento
-    $fechaNacimiento = $_POST['fecha_nacimiento'];
-    $edadMinima = 18;
-    $fechaActual = new DateTime();
-    $fechaNacimiento = new DateTime($fechaNacimiento);
-    $diferencia = $fechaActual->diff($fechaNacimiento);
-    $edad = $diferencia->y;*/
+    // Validar nombre y apellido (caracteres especiales no permitidos)
+    $nombre = $_POST['nombre'];
+    $apellido = $_POST['apellido'];
 
-    if ($edad < $edadMinima) {
-      echo "<script>alert('Debes ser mayor de 18 años');</script>";
+    if (!preg_match("/^[a-zA-Z ]*$/", $nombre) || !preg_match("/^[a-zA-Z ]*$/", $apellido)) {
+      echo "<script>alert('Los caracteres especiales no están permitidos en el nombre y apellido');</script>";
     } else {
       // Verificar si el correo electrónico ya existe en la base de datos
       $existingEmail = $_POST['email'];
@@ -31,41 +28,23 @@ if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['conf
       if ($stmt->rowCount() > 0) {
         echo "<script>alert('El correo electrónico ya está registrado');</script>";
       } else {
-        // Validar nombre y apellido (caracteres especiales no permitidos)
-        $nombre = $_POST['nombre'];
-        $apellido = $_POST['apellido'];
+        // Continuar con la inserción en la base de datos
+        $sql = "INSERT INTO users (email, password, nombre, apellido) VALUES (:email, :password, :nombre, :apellido)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':email', $_POST['email']);
 
-        if (!preg_match("/^[a-zA-Z ]*$/", $nombre) || !preg_match("/^[a-zA-Z ]*$/", $apellido)) {
-          echo "<script>alert('Los caracteres especiales no están permitidos en el nombre y apellido');</script>";
+        // password_hash crea una contraseña encriptada y segura
+        $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':apellido', $apellido);
+
+        if ($stmt->execute()) {
+          header("Location: index.php");
+          exit();
         } else {
-          /* Validar teléfono (no debe contener letras)
-          $telefono = $_POST['telefono'];
-
-          if (!is_numeric($telefono)) {
-            echo "<script>alert('El teléfono no debe contener letras');</script>";*/
-          } else {
-            // Continuar con la inserción en la base de datos
-            $sql = "INSERT INTO users (email, password, nombre, apellido, fecha_nacimiento, direccion, telefono) VALUES (:email, :password, :nombre, :apellido, :fecha_nacimiento, :direccion, :telefono)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':email', $_POST['email']);
-
-            // password_hash crea una contraseña encriptada y segura
-            $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-            $stmt->bindParam(':password', $password);
-            $stmt->bindParam(':nombre', $nombre);
-            $stmt->bindParam(':apellido', $apellido);
-            $stmt->bindParam(':fecha_nacimiento', $_POST['fecha_nacimiento']);
-            $stmt->bindParam(':direccion', $_POST['direccion']);
-            $stmt->bindParam(':telefono', $telefono);
-
-            if ($stmt->execute()) {
-              $message = 'USUARIO CREADO CON ÉXITO';
-              echo "<script>alert('USUARIO CREADO CON ÉXITO');</script>";
-            } else {
-              $message = 'ERROR DE CONEXIÓN';
-              echo "<script>alert('ERROR DE CONEXIÓN');</script>";
-            }
-          }
+          $message = 'ERROR DE CONEXIÓN';
+          echo "<script>alert('ERROR DE CONEXIÓN');</script>";
         }
       }
     }
@@ -74,6 +53,7 @@ if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['conf
   $message = 'Por favor, completa todos los campos';
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -141,8 +121,8 @@ if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['conf
   (es decir, no está vacío), se ejecuta el bloque de código que sigue a continuación.-->
   <main>
   <?php if(!empty($message)): ?>
-    <script>showAlert("<?php echo $message; ?>");</script>
-  <?php endif; ?>
+  <p> <?= $message ?></p>
+<?php endif; ?>
 
   <h1>SignUp</h1>
   <span>or <a href="login.php">Login</a></span>
