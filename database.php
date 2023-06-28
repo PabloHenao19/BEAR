@@ -6,7 +6,8 @@ $password = '';
 $database = 'php_login_database';
 
 try {
-  $conn = new PDO("mysql:host=$server;dbname=$database;", $username, $password);
+  $conn = new mysqli($servername, $username, $password, $dbname);
+  echo "Conexión exitosa a la base de datos";
 } catch (PDOException $e) {
   die('ERROR DE CONEXIÓN: ' . $e->getMessage());
 }

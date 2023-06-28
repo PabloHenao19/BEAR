@@ -34,7 +34,7 @@ body{
   background-image: url(Imagen/fondo.jpg);
  background-size: cover;
  background-attachment: fixed;
- text-align: center;
+ 
 
 }
 
@@ -84,7 +84,8 @@ main{
   font-size: 40px;
   font-weight: bold;
   padding: 0 45px;
-  line-height: 110px;
+  line-height: 40px;
+ 
 }
 
 
